@@ -32,6 +32,12 @@ that smells reusable becomes a method.
 
 ### Why this matters — affordances, not operations
 
+For the cross-language version of this discipline (the same idea
+stated language-neutrally, plus the LLM-codegen reasoning and the
+principled exceptions), see
+[`programming/abstractions.md`](../programming/abstractions.md).
+This section is the Rust-specific enforcement.
+
 Methods encode **affordances** — what kinds of things a value of this
 type can do. Free functions encode **operations** that happen to take
 some arguments. The distinction is load-bearing.

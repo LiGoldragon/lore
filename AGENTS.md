@@ -20,6 +20,9 @@ Curated daily-use docs for the tools Li works with. Read these before assuming h
 - [jj/basic-usage.md](jj/basic-usage.md) — jj (Jujutsu) daily loop: `@` model, commit/describe distinction, push, undo, bookmarks, remotes.
 - [nix/basic-usage.md](nix/basic-usage.md) — Nix flakes + home-manager: blueprint layout, lock-side pinning, devshells, `nix log`, home-manager primitives (env vars caveat for GUI apps).
 
+**Programming discipline (cross-language):**
+- [programming/abstractions.md](programming/abstractions.md) — Where behavior lives. **Every reusable verb belongs to a noun.** Affordance vs operation framing, the noun-creation forcing function, why this matters more for LLM agents than humans, principled exceptions. Read this before writing free functions.
+
 **Language style:**
 - [rust/style.md](rust/style.md) — Rust object style: methods on types not free fns, typed newtypes for domain values, single-object I/O at boundaries, manual `Error` enums (no thiserror/anyhow), trait-domain rule, doc protocol.
 - [rust/nix-packaging.md](rust/nix-packaging.md) — Canonical crane + fenix flake layout for any Rust crate: layered cargo-deps cache, toolchain pinned via `rust-toolchain.toml`, git-URL deps, workspace handling, `checks.default`.

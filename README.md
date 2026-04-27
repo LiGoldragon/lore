@@ -7,10 +7,12 @@ targeted partial reads instead of loading giant references.
 ## Layout
 
 ```
-jj/        — Jujutsu (jj)
-bd/        — beads (bd)
-dolt/      — Dolt + DoltHub
-nix/       — Nix, flakes, home-manager
+jj/            — Jujutsu (jj)
+bd/            — beads (bd)
+dolt/          — Dolt + DoltHub
+nix/           — Nix, flakes, home-manager
+rust/          — Rust style + nix-packaging
+programming/   — Cross-language discipline (abstractions, …)
 ```
 
 Each file has a frontmatter with the source URL and date fetched, so we can
