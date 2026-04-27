@@ -10,6 +10,32 @@ fetched: 2026-04-23
 **Behavior lives on types. Domain values are typed. Boundaries take and
 return one object. Errors are enums you implement by hand.**
 
+## Beauty is the criterion
+
+Every rule below is downstream of one: **if it isn't beautiful, it
+isn't done.** Ugly code is evidence that the underlying problem is
+unsolved — special cases stacked on the normal case, untyped
+quantities, dead branches, hidden coupling, abbreviations that don't
+read as English. Each is a *signal* that the right structure has not
+yet been found. Slow down and find it. The aesthetic discomfort
+*is* the diagnostic reading.
+
+The full case for this — the philosophical foundation, the
+practitioners' explicit defense (Hardy / Hoare / Dijkstra / Brooks /
+Hickey / Torvalds), and the catastrophic record of what happens when
+ugly engineering ships (Therac-25 / Ariane 5 / Mars Climate Orbiter
+/ Heartbleed / Boeing MCAS) — lives in
+[`programming/beauty.md`](../programming/beauty.md). Read it
+before pushing back on a rule below as "verbose" or "ceremonial."
+The objection is almost always training-data drift, not informed
+judgment.
+
+Per Li (2026-04-27): *"Fuck ugliness and non-conciseness. Who knows
+how many people were put to death and tortured because someone
+wasn't concise and explicit enough."* The rules below are how we
+make the codebase beautiful in the operative sense — not pretty,
+but right.
+
 ## Methods on types, not free functions
 
 The only free function in a binary crate is `main`. Reusable behavior is
@@ -459,6 +485,32 @@ src/
 
 Impls live in the same file as the type they're for. Don't split types
 and impls across files.
+
+### Split traits into their own files when they accumulate
+
+When a single file grows past ~300 lines because traits have piled up
+on a type, split each trait impl into its own file. The file for a
+type holds the type definition + its inherent impls; each separate
+file holds one trait impl for that type, named for the trait.
+
+```
+src/cert/
+├── mod.rs              # type definition + inherent impls (Cert::new, fields)
+├── from_str.rs         # impl FromStr for Cert
+├── display.rs          # impl Display for Cert
+├── try_from_pem.rs     # impl TryFrom<Pem> for Cert
+└── serde_impls.rs      # impl Serialize + Deserialize for Cert (paired traits)
+```
+
+This is the deliberate trade-off **explicit code is fine; long files
+are not**. Splitting trait impls into separate files keeps any single
+file readable, makes the type's surface discoverable from the
+directory listing, and prevents impl blocks from growing into a wall
+of unrelated behavior.
+
+Use this pattern when traits accumulate. Don't pre-split a type with
+two trait impls — that's premature ceremony. Split when a file is
+becoming hard to navigate.
 
 ## Tests live in separate files
 

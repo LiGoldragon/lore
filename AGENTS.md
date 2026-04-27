@@ -21,6 +21,7 @@ Curated daily-use docs for the tools Li works with. Read these before assuming h
 - [nix/basic-usage.md](nix/basic-usage.md) — Nix flakes + home-manager: blueprint layout, lock-side pinning, devshells, `nix log`, home-manager primitives (env vars caveat for GUI apps).
 
 **Programming discipline (cross-language):**
+- [programming/beauty.md](programming/beauty.md) — **Beauty is the criterion.** Ugly code is evidence that the underlying problem is unsolved. Read this before pushing back on any rule as "verbose" or "ceremonial." Philosophical foundation, the practitioners' explicit defense, the catastrophic record of what happens when ugly engineering ships.
 - [programming/abstractions.md](programming/abstractions.md) — Where behavior lives. **Every reusable verb belongs to a noun.** Affordance vs operation framing, the noun-creation forcing function, why this matters more for LLM agents than humans, principled exceptions. Read this before writing free functions.
 
 **Language style:**
