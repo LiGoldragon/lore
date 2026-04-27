@@ -192,6 +192,113 @@ Prefer `from_*`, `to_*`, `into_*`, `as_*`. Avoid `read`, `write`, `load`,
 `get` / `put` are fine for storage interfaces (`ChunkStore::get`); they
 name the storage operation, not a conversion.
 
+## Naming — full words by default
+
+Identifiers are read far more than they are written. Cryptic abbreviations
+optimize for the writer (a few keystrokes saved) at the reader's expense
+(one mental lookup per occurrence). The empirical literature is unanimous;
+the cultural inertia toward `ctx` / `tok` / `de` / `pf` is fossil from
+6-char FORTRAN, 80-column cards, and 10-cps teletypes — none of which
+still apply. See [mentci reports/092](https://github.com/LiGoldragon/mentci/blob/main/reports/092-naming-research-and-rule.md)
+for the full research.
+
+**Default: spell every identifier as full English words.**
+
+```rust
+// Wrong — cryptic in-group dialect
+fn parse(input: &str) -> Result<Token, Error> {
+    let mut lex = Lexer::new(input);
+    let tok = lex.next_tok()?;
+    let kd = tok.kind();
+    let ctx = ParseCtx::new(&kd);
+    let de = Deser::with_ctx(ctx);
+    de.deser_op(&tok)
+}
+
+// Right — every name reads as English
+fn parse(input: &str) -> Result<Token, Error> {
+    let mut lexer = Lexer::new(input);
+    let token = lexer.next_token()?;
+    let kind = token.kind();
+    let context = ParseContext::new(&kind);
+    let deserializer = Deserializer::with_context(context);
+    deserializer.deserialize_operation(&token)
+}
+```
+
+Common offenders to spell out:
+
+| bad | good |
+|---|---|
+| `lex` | `lexer` |
+| `tok` | `token` |
+| `ident` | `identifier` |
+| `op` | `operation` (or specific: `assert_op`) |
+| `de` | `deserializer` |
+| `kd` | `kind_decl` (or `KindDecl`) |
+| `pf` | `pattern_field` |
+| `ctx` | `context` (or specific: `parse_context`) |
+| `cfg` | `config` (or `configuration`) |
+| `addr` | `address` |
+| `buf` | `buffer` |
+| `tmp` | `temporary` (or — better — name what it holds) |
+| `arr` | `array` (or — better — what it contains) |
+| `obj` | (name what it actually is) |
+| `params` | `parameters` |
+| `args` | `arguments` |
+| `vars` | `variables` |
+| `proc` | `procedure` or `process` |
+| `calc` | `calculate` |
+| `init` | `initialize` |
+| `repr` | `representation` |
+| `gen` | `generate` or `generator` |
+| `ser` / `deser` | `serialize` / `deserialize` |
+| `fn` (in identifier) | `function` (the `fn` *keyword* is fine) |
+| `impl` (in identifier) | `implementation` (the `impl` *keyword* is fine) |
+
+### Permitted exceptions — tight, named, no others
+
+1. **Loop counters in tight scopes (<10 lines).** `for i in 0..n` is fine.
+   Beyond ~10 lines or nested, use descriptive names.
+2. **Mathematical contexts** where the math itself uses the symbol.
+   `x`, `y`, `z`, `theta`, `phi`, `lambda`, `n` for sample size,
+   `p` for probability — only when the surrounding code or comment
+   establishes the math context.
+3. **Generic type parameters.** `T`, `U`, `V`, `K`, `E`. Use a descriptive
+   name when the parameter has non-trivial semantic content.
+4. **Acronyms in general English.** `id`, `url`, `http`, `json`, `uuid`,
+   `db`, `os`, `cpu`, `ram`, `io`, `ui`, `tcp`, `udp`, `dns`. Spell them
+   out when ambiguous in context.
+5. **Names inherited from `std` or well-known crates.** `Vec`, `HashMap`,
+   `Arc`, `Rc`, `Box`, `Cell`, `RefCell`, `Mutex`, `mpsc`, `regex`. Don't
+   rename these; do *not* extend the abbreviation pattern to your own
+   types.
+6. **Domain-standard short names already documented in an
+   `ARCHITECTURE.md`.** `slot`, `opus`, `node`, `frame` are full words
+   and need no exception. If a true short form is load-bearing in the
+   schema, name it in `ARCHITECTURE.md` so the exception is explicit;
+   otherwise spell it out.
+
+### Rule of thumb (Martin / Linus, combined)
+
+**Name length proportional to scope.** A 3-line loop counter can be `i`.
+A module-level type that appears across the codebase must spell itself
+out. A function parameter that lives for 50 lines must read as English.
+
+### Interaction with the Rust convention `&self`
+
+`self` is the implicit receiver and is universal across Rust — leave it.
+This rule is about *naming the things you create*, not renaming the
+language's primitives.
+
+### How to apply when generating code
+
+Spell identifiers as full English words by default. When the surrounding
+code uses cryptic identifiers, do not propagate them into new code:
+either rename (if rename is in scope) or use the full form for new
+identifiers and flag the inconsistency as a follow-up. Pattern-matching
+the local dialect is exactly the failure mode this rule exists to break.
+
 ## Errors: typed enum per crate via thiserror
 
 Each crate defines its own `Error` enum in `src/error.rs`, derived with
