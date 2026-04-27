@@ -1,5 +1,5 @@
 ---
-source: (our own — distilled from mentci/reports/096)
+source: (our own — distilled from abstractions-research.md)
 fetched: 2026-04-27
 ---
 
@@ -13,10 +13,10 @@ Haskell's typeclass-constrained free functions). The full research
 backing this rule, with citations across cognitive science,
 software-engineering practice, type theory, and LLM-codegen
 empirical work, lives in
-[mentci reports/096](https://github.com/LiGoldragon/mentci/blob/main/reports/096-methods-on-types-research-2026-04-27.md).
+[abstractions-research.md](abstractions-research.md).
 
-This file is the working document. Read this; consult 096 when you
-need the *why* in depth.
+This file is the working document. Read this; consult the research
+doc when you need the *why* in depth.
 
 ## The rule
 
