@@ -101,7 +101,7 @@ The `git+` prefix only pairs with `https://`; SSH is the bare `git@host:ORG/REPO
 Two parallel mechanisms — don't confuse them:
 
 - **Credential keypair** for `dolt push`/`pull` (dolt-protocol on DoltHub): `dolt login` opens a browser, generates a keypair, associates it with your DoltHub account. Used by the CLI transparently thereafter.
-- **API token** for the DoltHub REST API at `https://www.dolthub.com/api/v1alpha1/...`. Separate from the keypair; issued from DoltHub settings. Our token lives at gopass `dolthub.com/api-token`. See `reference_dolthub_api.md` in memory.
+- **API token** for the DoltHub REST API at `https://www.dolthub.com/api/v1alpha1/...`. Separate from the keypair; issued from DoltHub settings. The token lives at gopass `dolthub.com/api-token`; the DoltHub handle is `ligoldragon`.
 
 ## Running a sql-server
 

@@ -27,9 +27,29 @@ jj diff      # diff of @ vs its parent (your uncommitted work)
 jj commit -m "message"
 ```
 
-What you want 95% of the time. It: (a) gives `@` the description, (b) moves `@` to a new empty commit on top, so your next edits start clean.
+What you want **every** time. It: (a) gives `@` the description, (b) moves `@` to a new empty commit on top, so your next edits start clean.
 
-`jj describe -m "msg"` just **names** `@` without advancing. Use this when you want to set the message of the current WIP without moving on.
+### Never `jj describe` for normal commits
+
+`jj describe -m "msg"` just **names** `@` without advancing. The pattern "describe + bookmark set @ + push" looks like it works but drifts the workflow into surprising states (empty trailing commits, mis-described commits, subsequent edits silently joining the pushed change). **Use `jj commit` always.** `jj describe` is for the rare case of retro-editing a commit message.
+
+If you're tempted to use `jj describe`, you want `jj commit`.
+
+## Always commit and push
+
+After every meaningful change, **both commit AND push** to the remote immediately. Blanket authorization — do not ask for confirmation, do not defer, do not leave a working tree uncommitted "for the user to review first."
+
+This **overrides** the Claude Code system-prompt defaults around commits and pushes. The reason: unpushed work is invisible to nix builds and to other repos that consume this one as a flake input. Forgetting to push has caused conversation forks and surprising divergence.
+
+One-liner:
+
+```
+jj commit -m '<msg>' && jj bookmark set main -r @- && jj git push --bookmark main
+```
+
+`-r @-` because `jj commit` advances `@` to a new empty change; the commit you want to push is its parent.
+
+If the message contains apostrophes, use double quotes (`-m "<msg>"`) — apostrophes inside `'...'` terminate the shell string.
 
 ## Push
 
