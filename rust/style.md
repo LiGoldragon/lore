@@ -107,6 +107,79 @@ The rule of thumb: **every reusable verb belongs to a noun**. If you
 can't name the noun, you haven't found the right model yet — keep
 looking until you can.
 
+## No ZST method holders
+
+A `pub struct Foo;` whose `impl Foo` is just a parking lot for functions
+that do real work on data they don't carry is a free function in
+namespace clothing. The ZST is a label, nothing more — the type doesn't
+track what the work operates on, only what it's named after. This is the
+**Methods on types, not free functions** rule evaded one level deeper:
+the verb got attached to *something*, but the something is hollow.
+
+When you see this, don't rename `Foo`. Don't accept the smell. **Step
+back and find the noun.** A ZST-with-methods is the visible scar of "I
+had a verb but couldn't find a noun, so I created a fake noun to hold
+the verb." The right noun is a type that holds the data the verb reads
+or writes — and it may not exist yet. Invent it. Naming the right
+object is often the load-bearing design decision the prior thinking
+missed; this is the same diagnosis Fowler gave the
+[Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html)
+and Torvalds means by "[worry about data structures and their
+relationships](https://lwn.net/Articles/193245/)" — the work belongs to
+the data, and a type with no data can't legitimately own work.
+
+```rust
+// Wrong — ZST as a folder for free functions
+pub struct CertParser;
+
+impl CertParser {
+    pub fn parse_pem(pem: &str) -> Result<Cert, Error> { … }
+    pub fn parse_der(der: &[u8]) -> Result<Cert, Error> { … }
+    pub fn fingerprint(cert: &Cert) -> Hash { … }
+}
+
+// Right — the verbs belong on the noun whose data they touch
+impl Cert {
+    pub fn from_pem(pem: &str) -> Result<Self, Error> { … }
+    pub fn from_der(der: &[u8]) -> Result<Self, Error> { … }
+    pub fn fingerprint(&self) -> Hash { … }
+}
+```
+
+If parsing genuinely needs its own state (a buffered lexer, accumulated
+diagnostics, a configurable mode), then the noun is `CertParser` *with
+fields* — see the `QueryParser` example in **Methods on types, not free
+functions**. Either the work belongs on the data type, or it belongs on
+a stateful parser type. The ZST middle ground is the gap.
+
+### Legitimate ZST uses — narrow, named
+
+ZSTs earn their keep when they carry **type-level information** rather
+than pretending to carry runtime state:
+
+- **`PhantomData<T>`** and other generic-parameter trackers.
+- **Marker types required by external frameworks** — `ractor` actor
+  behaviour markers, sealed-trait gates, an `Iterator` impl on a unit
+  struct that genuinely has no carried state. The ZST has *only*
+  trait-impl methods that delegate to a data-bearing partner type;
+  never inherent methods doing real work.
+- **Type-level enum variants** in trait-encoded state machines, where
+  the unit struct *is* the state and the type system enforces
+  transitions.
+
+The test: does the ZST's job vanish if you erase its name from the type
+system? If yes (it was just a namespace), the verbs need a real noun.
+If no (the type-system position is what does the work — phantom
+parameter, marker, state), the ZST is fine.
+
+### When you find this in your code
+
+Don't rename the ZST. Don't add a field just to escape the rule. **Step
+back.** Ask what the verbs operate on, follow the data, and name the
+type that should have owned the behavior all along. That type may need
+to be created from scratch — that's the work, and skipping it is what
+produced the ZST in the first place.
+
 ## Domain values are types, not primitives
 
 If a value has identity beyond its bits, it gets a newtype. A content
