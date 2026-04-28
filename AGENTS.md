@@ -27,6 +27,7 @@ Curated daily-use docs for the tools Li works with. Read these before assuming h
 **Language style:**
 - [rust/style.md](rust/style.md) — Rust object style: methods on types not free fns, typed newtypes for domain values, single-object I/O at boundaries, manual `Error` enums (no thiserror/anyhow), trait-domain rule, doc protocol.
 - [rust/nix-packaging.md](rust/nix-packaging.md) — Canonical crane + fenix flake layout for any Rust crate: layered cargo-deps cache, toolchain pinned via `rust-toolchain.toml`, git-URL deps, workspace handling, `checks.default`.
+- [rust/ractor.md](rust/ractor.md) — Ractor 0.15 in CANON daemons: per-file four-piece template (Actor / State / Arguments / Message), per-verb typed `RpcReplyPort<T>` messages, supervision, self-cast loops, sync façade. Grounded in the criome example.
 
 **Data / issues:**
 - [bd/basic-usage.md](bd/basic-usage.md) — bd (beads) daily loop: init --skip-hooks --skip-agents, create/ready/close, dependencies, dolt push/pull.

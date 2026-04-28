@@ -443,6 +443,11 @@ I/O actually matters" above is a historical constraint being
 relaxed: for daemons and structured services, tokio via ractor
 is just the runtime.
 
+For the *how* — the per-file four-piece template, perfect-
+specificity messages, supervision, self-cast loops, and the
+sync-façade pattern — see [`ractor.md`](ractor.md), grounded
+in the [criome](https://github.com/LiGoldragon/criome) example.
+
 Plain sync code is fine for one-shot CLIs, build tools, and
 library crates with no concurrent state.
 
