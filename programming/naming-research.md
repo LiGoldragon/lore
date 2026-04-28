@@ -321,7 +321,6 @@ here; identical text added to [mentci AGENTS.md](https://github.com/LiGoldragon/
 > | `ident` | `identifier` |
 > | `op` | `operation` (or specific: `assert_op`) |
 > | `de` | `deserializer` |
-> | `kd` | `kind_decl` (or `KindDecl`) |
 > | `pf` | `pattern_field` |
 > | `ctx` | `context` (or specific: `parse_context`) |
 > | `cfg` | `config` (or `configuration`) |
