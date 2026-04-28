@@ -141,9 +141,8 @@ pkgs.runCommand "scenario-chain" { } ''
 
 For per-daemon-transformation testing, each step runs ONE
 one-shot binary. The daemons need to expose a one-shot mode
-(`<crate>-<verb>` binaries that read stdin and write stdout —
-see [AGENTS.md §"One-shot binaries"](../../mentci/AGENTS.md)
-for the convention).
+— `<crate>-<verb>` binaries that read stdin and write stdout
+(e.g. `nexus-parse`, `nexus-render`, `criome-handle-frame`).
 
 ```nix
 # checks/roundtrip-parse.nix
