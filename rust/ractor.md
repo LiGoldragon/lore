@@ -155,6 +155,30 @@ as `SpawnErr`. Use `?` on fallible startup, never `unwrap`. `post_stop` is
 skipped on `Signal::Kill` and on panic in `handle`; don't put must-run cleanup
 there.
 
+**State doesn't drop when `handle` returns.** Ractor wraps the exiting actor's
+State in a `BoxedState` and queues it to the supervisor as part of the
+`ActorTerminated` event. The State only drops when the supervisor's mailbox
+processes that event — which can be much later if the supervisor is inside an
+active `await` (mailbox priority only matters *between* iterations, not within
+an active handle).
+
+If the State holds a resource that something *external* is waiting on — a
+UnixStream the client is reading from, a TcpStream a peer is waiting on EOF
+from — close it **explicitly** inside `handle` before `myself.stop()`. Relying
+on `Drop` is a deadlock when the supervisor is busy:
+
+```rust
+async fn handle(&self, myself: ActorRef<Self::Msg>, _message: Message,
+                state: &mut State)
+    -> std::result::Result<(), ActorProcessingErr>
+{
+    state.do_work().await?;
+    let _ = state.client.shutdown().await;  // close the write half eagerly
+    myself.stop(None);
+    Ok(())
+}
+```
+
 ## Worker pools — `Vec<ActorRef<…>>` plus shared cursor
 
 A worker pool is N spawned-linked siblings plus an `Arc<AtomicUsize>` cursor
