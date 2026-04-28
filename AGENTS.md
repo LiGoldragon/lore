@@ -23,6 +23,7 @@ Curated daily-use docs for the tools Li works with. Read these before assuming h
 **Programming discipline (cross-language):**
 - [programming/beauty.md](programming/beauty.md) — **Beauty is the criterion.** Ugly code is evidence that the underlying problem is unsolved. Read this before pushing back on any rule as "verbose" or "ceremonial." Philosophical foundation, the practitioners' explicit defense, the catastrophic record of what happens when ugly engineering ships.
 - [programming/abstractions.md](programming/abstractions.md) — Where behavior lives. **Every reusable verb belongs to a noun.** Affordance vs operation framing, the noun-creation forcing function, why this matters more for LLM agents than humans, principled exceptions. Read this before writing free functions.
+- [programming/push-not-pull.md](programming/push-not-pull.md) — **Polling is wrong. Always.** Producers push, consumers subscribe. The subscription primitive is the contract; if it doesn't exist yet, defer the real-time feature rather than poll "for now." Two narrow look-alikes that aren't polling (reachability probes; backpressure-aware pacing).
 
 **Language style:**
 - [rust/style.md](rust/style.md) — Rust object style: methods on types not free fns, typed newtypes for domain values, single-object I/O at boundaries, manual `Error` enums (no thiserror/anyhow), trait-domain rule, doc protocol.
