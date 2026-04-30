@@ -349,8 +349,8 @@ optimize for the writer (a few keystrokes saved) at the reader's expense
 (one mental lookup per occurrence). The empirical literature is unanimous;
 the cultural inertia toward `ctx` / `tok` / `de` / `pf` is fossil from
 6-char FORTRAN, 80-column cards, and 10-cps teletypes — none of which
-still apply. See [naming-research.md](../programming/naming-research.md)
-for the full research.
+still apply. See [`programming/naming.md`](../programming/naming.md)
+for the language-agnostic rule and the table of common offenders.
 
 **Default: spell every identifier as full English words.**
 

@@ -1,6 +1,6 @@
 ---
-source: (our own — distilled from beauty-research.md)
-fetched: 2026-04-27
+source: (our own)
+fetched: 2026-04-30
 ---
 
 # Beauty and elegance — the criterion
@@ -11,14 +11,6 @@ discomfort *is* the diagnostic reading. When the right structure
 is found, the ugliness dissolves: special cases collapse into
 the normal case; repetition resolves into a single named
 pattern.
-
-The full case — philosophical foundation across two millennia,
-the practitioners' explicit defense (Hardy / Hoare / Dijkstra /
-Brooks / Hickey / Torvalds), and the catastrophic record of
-what happens when ugly engineering ships (Therac-25 / Ariane 5
-/ Mars Climate Orbiter / Heartbleed / Boeing MCAS) — lives in
-[beauty-research.md](beauty-research.md). This file is the
-working doc.
 
 ## The rule
 

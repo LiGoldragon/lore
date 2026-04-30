@@ -1,6 +1,6 @@
 ---
-source: (our own — distilled from abstractions-research.md)
-fetched: 2026-04-27
+source: (our own)
+fetched: 2026-04-30
 ---
 
 # Abstractions — where behavior lives
@@ -9,14 +9,7 @@ A short discipline for thinking about programs: **every reusable
 verb belongs to a noun.** This applies to any language with method
 dispatch (Rust, Python, Go, Java, C++, Smalltalk) and is enforced
 by convention in languages without it (C's `_operations` vtables,
-Haskell's typeclass-constrained free functions). The full research
-backing this rule, with citations across cognitive science,
-software-engineering practice, type theory, and LLM-codegen
-empirical work, lives in
-[abstractions-research.md](abstractions-research.md).
-
-This file is the working document. Read this; consult the research
-doc when you need the *why* in depth.
+Haskell's typeclass-constrained free functions).
 
 ## The rule
 
@@ -221,6 +214,54 @@ of the problem isn't fully formed yet. Three kinds of resolution:
 
 If none of these apply, you don't have a clean program model
 yet. Slow down. Don't paper over the gap with a free function.
+
+## The wrong-noun trap
+
+The rule says every reusable verb belongs to *a* noun. The
+discipline is sharper: it belongs to **the right** noun — the
+one whose primary concern matches the verb's concern. Picking a
+nearby noun "because it's already there and might as well own
+this too" is a failure mode the rule's surface form doesn't catch
+on its own. Adjacency of *types* is not the same thing as
+adjacency of *concerns*.
+
+Concrete shape — two proc-macro crates sitting close together:
+
+```
+   nota-derive                signal-derive
+   ────────────────────       ─────────────────────────
+   concern: text              concern: schema
+     encode/decode              introspection
+   verbs:                     verbs:
+     emit codec impls           emit schema descriptors
+                                over signal record types
+```
+
+Both crates touch the same underlying Rust types — nota-codec
+consumes signal records as its input. The temptation is to put
+schema introspection into nota-derive "because it already sees
+the types." That puts the verb (introspecting signal types) on
+the wrong noun (the text codec). The right noun is signal-derive,
+because schema introspection is *signal's* concern; the codec is
+downstream of signal, not the other way around.
+
+The diagnostic, when finding the noun: if the answer sounds like
+*"well, this nearby type **could** hold it,"* slow down. The
+right noun is the one whose primary concern matches the verb's
+concern. The merely-convenient noun produces all the same
+maintainability problems as putting the verb on no type at all,
+plus the extra cost that it now actively *hides* the missing
+proper noun.
+
+The rule, sharpened: when two crates / two types / two modules
+have similar surface (touch the same data; have similar names)
+but different *concerns*, the verb goes with the concern, not
+with the surface.
+
+This pairs with [`micro-components.md`](micro-components.md) —
+the same discipline at the crate boundary. One capability per
+crate; "the new crate's surface is similar to the existing one"
+is not by itself a reason to fold them.
 
 ## Companion disciplines
 
