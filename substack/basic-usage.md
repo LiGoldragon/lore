@@ -15,9 +15,9 @@ hostname.
 
 ## Setup (in our workspace)
 
-On PATH through the mentci-tools bundle as `substack`. The packaged binary is
-the flake's wrapped default: it shells out to `gopass` before `exec`ing the
-unwrapped CLI, injecting the two required env vars:
+On PATH as `substack` via the home profile. The packaged binary is a wrapper
+that shells out to `gopass` before `exec`ing the unwrapped CLI, injecting the
+two required env vars:
 
 - `SUBSTACK_API_KEY` ← `gopass show -o substack.com/api-key`
 - `SUBSTACK_HOSTNAME` ← `gopass show -o substack.com/api-key publication-url`

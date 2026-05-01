@@ -8,11 +8,11 @@ trimmed: dropped MCP JSON configuration, deep protocol details, and political/le
 
 ## What it is
 
-A Go CLI (plus optional MCP server) that searches and downloads books and academic articles from Anna's Archive. Upstream binary is `annas-mcp`; our mentci-tools wrapper exposes it as `annas`. Most operations (all downloads) require an Anna's Archive API key, which in turn requires a paid donation/membership.
+A Go CLI (plus optional MCP server) that searches and downloads books and academic articles from Anna's Archive. Upstream binary is `annas-mcp`; our wrapper exposes it as `annas`. Most operations (all downloads) require an Anna's Archive API key, which in turn requires a paid donation/membership.
 
 ## Setup (in our workspace)
 
-Nothing to install — `annas` is on `PATH` via the mentci-tools CLI bundle. The wrapper transparently populates three env vars each invocation:
+Nothing to install — `annas` is on `PATH` via the home profile. The wrapper transparently populates three env vars each invocation:
 
 - `ANNAS_SECRET_KEY` — pulled from gopass at `annas-archive.gl/secret-key`
 - `ANNAS_DOWNLOAD_PATH` — defaults to `$PWD` (so files land where you ran the command)

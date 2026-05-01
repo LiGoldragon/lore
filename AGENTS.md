@@ -473,7 +473,7 @@ sources.
 - `bd/basic-usage.md` — bd (beads) daily loop.
 - `dolt/basic-usage.md` — Dolt SQL daily loop.
 
-**CLI bundle tools** (bundled via `mentci-tools.packages.<sys>.cli`):
+**CLI tools** (on PATH via the home profile):
 - `annas/basic-usage.md` — Anna's Archive
   CLI.
 - `linkup/basic-usage.md` — Linkup

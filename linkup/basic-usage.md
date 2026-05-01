@@ -12,7 +12,7 @@ Linkup is a web-search API aimed at grounding LLMs — you send a query, you get
 
 ## Setup (in our workspace)
 
-`linkup` is on PATH via the mentci-tools bundle. The wrapper shell script sources `LINKUP_API_KEY` from gopass at `linkup.so/api-key` before exec'ing the real CLI, so you don't run `linkup setup` — the key is already there.
+`linkup` is on PATH via the home profile. The wrapper shell script sources `LINKUP_API_KEY` from gopass at `linkup.so/api-key` before exec'ing the real CLI, so you don't run `linkup setup` — the key is already there.
 
 ```
 linkup config      # verify the key is being picked up
