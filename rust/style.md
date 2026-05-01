@@ -517,7 +517,7 @@ is just the runtime.
 
 For the *how* — the per-file four-piece template, perfect-
 specificity messages, supervision, self-cast loops, and the
-sync-façade pattern — see [`ractor.md`](ractor.md), grounded
+sync-façade pattern — see `ractor.md`, grounded
 in the criome example.
 
 Plain sync code is fine for one-shot CLIs, build tools, and

@@ -258,7 +258,7 @@ have similar surface (touch the same data; have similar names)
 but different *concerns*, the verb goes with the concern, not
 with the surface.
 
-This pairs with [`micro-components.md`](micro-components.md) —
+This pairs with `micro-components.md` —
 the same discipline at the crate boundary. One capability per
 crate; "the new crate's surface is similar to the existing one"
 is not by itself a reason to fold them.
