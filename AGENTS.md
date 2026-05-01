@@ -134,7 +134,7 @@ Use one of these instead:
   The reader is in the workspace and can navigate.
 - **Repo-level pointer** — `github:ligoldragon/<repo>` (nix-flake
   notation) for "this repo exists at that URL." It points at the
-  repo, not a specific file inside it; renames within don't break it.
+  repo, not a specific file inside it; renames within stay valid.
 
 Inside a single repo, use a markdown link with a relative path —
 those resolve in editors and on github regardless of the repo's

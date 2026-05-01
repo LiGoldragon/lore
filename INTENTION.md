@@ -90,13 +90,14 @@ produces a better engine.
 
 ## The relationship with rules
 
-Specific rules — about what the engine does and does not do, how
-agents work, what code looks like, which frames are rejected — live
-downstream of this document and flow from the intent above.
+Specific rules — about the engine's behaviour, how agents work,
+what code looks like, what shapes the architecture commits to —
+live downstream of this document and flow from the intent above.
 
-If a rule somewhere conflicts with this document, the rule is
-wrong; rewrite it. If a need for a new specific rule surfaces,
-write the rule downstream; touch this document only when the need
+If a rule somewhere conflicts with this document, INTENTION wins;
+the downstream rule gets rewritten. When a need for a new
+specific rule surfaces, write the rule downstream; touch this
+document only when the need
 reveals a deeper intent that wasn't explicit before.
 
 ---
