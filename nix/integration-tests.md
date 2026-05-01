@@ -43,7 +43,7 @@ against a fresh daemon process. Tests that *application
 state* survives clean shutdown and re-open. Use when:
 
 - Verifying a database file format is stable across daemon
-  restarts (this is what mentci's `scenario-chain` exercises)
+  restarts (this is what workspace's `scenario-chain` exercises)
 - Schema migration testing: state-V1 → daemon v2 reads it →
   state-V2
 - Bootstrap-loop testing: criome v1 stores records → criome v2
@@ -57,7 +57,7 @@ version boundaries. Use when:
 
 - Verifying rkyv (or other binary) wire format is stable
   across process boundaries — bytes written to disk by one
-  process must decode in another (mentci's `roundtrip-chain`
+  process must decode in another (workspace's `roundtrip-chain`
   exercises this with length-prefixed signal Frames)
 - Per-daemon-transformation isolation: parser bug, handler
   bug, renderer bug each fail the specific phase that
