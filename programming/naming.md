@@ -116,7 +116,7 @@ the bug, not the criterion.
 
 ## Companion rule
 
-Pairs with [beauty.md](beauty.md): a name that doesn't read as
+Pairs with `beauty.md`: a name that doesn't read as
 English is one of the diagnostic readings of structural ugliness.
 The aesthetic discomfort is the signal that the right structure
 (the right name, the right type) hasn't been found.

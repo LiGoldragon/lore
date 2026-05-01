@@ -34,7 +34,7 @@ what the underlying problem is; fix the underlying problem.
   a label, not an abstraction.
 - **A free function that should be a method.** A verb that
   could attach to a noun reads as a missing model. See
-  [abstractions.md](abstractions.md).
+  `abstractions.md`.
 - **Dead code retained "for safety" or "for backward
   compatibility."** Ariane 5. Knight Capital. Delete it; the
   history is in `git log`.

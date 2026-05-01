@@ -518,7 +518,7 @@ is just the runtime.
 For the *how* — the per-file four-piece template, perfect-
 specificity messages, supervision, self-cast loops, and the
 sync-façade pattern — see [`ractor.md`](ractor.md), grounded
-in the [criome](https://github.com/LiGoldragon/criome) example.
+in the criome example.
 
 Plain sync code is fine for one-shot CLIs, build tools, and
 library crates with no concurrent state.
@@ -636,7 +636,7 @@ runner. `cargo test` alone skips the reproducibility guarantees.
 
 **Canonical flake layout** for new crates (crane + fenix, with
 layered cargo-deps caching so source-only changes recompile in
-seconds): see [nix-packaging.md](nix-packaging.md). The same file
+seconds): see `nix-packaging.md`. The same file
 covers `rust-toolchain.toml`, git-URL deps, workspace handling, and
 `checks.default` wiring.
 
@@ -661,7 +661,7 @@ don't `#[ignore]` without filing.
 - Serialization: `rkyv` for binary contracts between our Rust
   components (storage, zero-copy reads); `serde` only at external
   boundaries that demand it (e.g., JSON for legacy interop).
-  Internal text formats use [`nota-codec`](https://github.com/LiGoldragon/nota-codec)'s
+  Internal text formats use `nota-codec`'s
   typed `Decoder` + `Encoder`, not serde.
 - `tokio` comes in automatically via ractor for any service with
   concurrent state. Plain sync is fine for one-shot CLIs and

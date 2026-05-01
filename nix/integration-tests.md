@@ -1,5 +1,5 @@
 ---
-source: (our own — distilled from mentci/checks/ + mentci/lib/scenario.nix)
+source: (our own — distilled from workspace/checks/ + workspace/lib/scenario.nix)
 fetched: 2026-04-28
 ---
 
@@ -234,7 +234,7 @@ under `lib/<name>.nix` and is exposed via
 
 ## Reference implementations
 
-- [`mentci/lib/scenario.nix`](https://github.com/LiGoldragon/mentci/blob/main/lib/scenario.nix) — daemon-mode step builder
-- [`mentci/checks/scenario-*.nix`](https://github.com/LiGoldragon/mentci/blob/main/checks/) — daemon-mode chain (assert-node → query-nodes → chain)
-- [`mentci/checks/roundtrip-*.nix`](https://github.com/LiGoldragon/mentci/blob/main/checks/) — binary-stability chain (parse → handle → render → assert)
-- [`mentci/checks/integration.nix`](https://github.com/LiGoldragon/mentci/blob/main/checks/integration.nix) — single-derivation monolithic shuttle (the simpler pattern)
+- `workspace/lib/scenario.nix` — daemon-mode step builder
+- `workspace/checks/scenario-*.nix` — daemon-mode chain (assert-node → query-nodes → chain)
+- `workspace/checks/roundtrip-*.nix` — binary-stability chain (parse → handle → render → assert)
+- `workspace/checks/integration.nix` — single-derivation monolithic shuttle (the simpler pattern)
