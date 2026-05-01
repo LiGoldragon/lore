@@ -206,7 +206,7 @@ that when you need the localisation or the cache-by-phase.
 
 ## Blueprint discovery
 
-Per `tools-documentation/rust/nix-packaging.md`, blueprint
+Per `lore/rust/nix-packaging.md`, blueprint
 auto-discovers `.nix` files under `checks/` as flake outputs.
 Cross-references between checks use `flake.checks.${system}.<name>`
 inside the receiving file's `let` block — no `import` needed

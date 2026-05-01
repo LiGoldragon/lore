@@ -1,4 +1,4 @@
-# tools-documentation
+# lore
 
 Curated docs from upstream tools we use daily, plus our own discoveries that
 don't live anywhere else. Small files, one topic per file, so agents can do
