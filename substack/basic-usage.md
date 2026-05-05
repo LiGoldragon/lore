@@ -13,7 +13,7 @@ Substack posts and publication settings via Substack's private web API.
 Authentication is just the `substack.sid` session cookie plus the publication
 hostname.
 
-## Setup (in our workspace)
+## Setup
 
 On PATH as `substack` via the home profile. The packaged binary is a wrapper
 that shells out to `gopass` before `exec`ing the unwrapped CLI, injecting the

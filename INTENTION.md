@@ -1,7 +1,7 @@
 # INTENTION
 
 *The intent that shapes every decision in the sema-ecosystem.
-Upstream of every other document. Where the rest of the workspace
+Upstream of every other document. Where the rest of the lore
 says **what** the system is and **how** to work on it, this document
 says **why** — and what is being optimised for at the deepest level.*
 

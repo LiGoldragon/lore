@@ -1,8 +1,8 @@
-# Agent instructions — workspace-wide canonical contract
+# Agent instructions — canonical contract
 
-This file is the **canonical workspace contract**. Every per-repo
-`AGENTS.md` is a thin shim pointing here; the rules below apply
-to every repo under `~/git/`. Repo-specific carve-outs live in
+This file is the **canonical agent contract** for Li's repos. Every
+per-repo `AGENTS.md` is a thin shim pointing here; the rules below
+apply to every repo under `~/git/`. Repo-specific carve-outs live in
 that repo's own `AGENTS.md`.
 
 ---
@@ -17,13 +17,13 @@ that repo's own `AGENTS.md`.
    `github:ligoldragon/criome`) — what the engine IS.
    Project-wide invariants, the request flow, the daemon shape.
    Required before touching any sema-ecosystem repo.
-3. **This file** (`lore/AGENTS.md`) — how agents work in the
-   workspace.
+3. **This file** (`lore/AGENTS.md`) — how agents work across
+   Li's repos.
 4. **The repo-specific `AGENTS.md`** of whatever repo you're
    editing — repo-role + carve-outs only.
 
-A new agent entering the workspace reads (1) and (2) before
-making any decisions; they are upstream of every rule below.
+A new agent reads (1) and (2) before making any decisions; they
+are upstream of every rule below.
 
 ---
 
@@ -37,7 +37,7 @@ reads `CLAUDE.md`) converge on a single source of truth. When
 creating or restructuring a repo, keep this pattern.
 
 Per-repo `AGENTS.md` itself opens with:
-**"You MUST read [lore/AGENTS.md](path) — the workspace-wide
+**"You MUST read [lore/AGENTS.md](path) — the canonical agent
 contract."** plus the repo's role and carve-outs.
 
 ---
@@ -63,22 +63,11 @@ root before the first commit.
 
 ---
 
-## Inclusion scope — HARD
-
-Edit only repos listed as CANON or TRANSITIONAL in
-`workspace/docs/workspace-manifest.md`. Repos outside that list
-are out of scope; their files stay untouched. To bring a new
-repo into scope: add it to the manifest and `workspace/devshell.nix`,
-write a report, commit.
-
----
-
 ## Documentation layers — strict separation
 
 | Where | What |
 |---|---|
 | `criome/ARCHITECTURE.md` | **Project-wide canonical.** Prose + diagrams only. High-level shape, invariants, relationships of the engine being built. |
-| `workspace/ARCHITECTURE.md` | **Dev environment.** Workspace conventions, role, layout. Points at criome for the project itself. |
 | `<repo>/ARCHITECTURE.md` | **Per-repo bird's-eye view.** Repo's role, owned-and-not-owned boundaries, code map, status. Points at criome by prose for cross-cutting context. |
 | `<repo>/reports/NNN-*.md` | **Decision records + design syntheses.** Prose + visuals. |
 | Each repo's source | **Implementation.** Rust code, tests, flakes, `Cargo.toml`. Type sketches as compiler-checked skeletons live here. |
@@ -89,9 +78,8 @@ code out of reports into the appropriate repo. Architecture stays
 slim so it remains readable in one pass.
 
 Cross-references flow *into* architecture from reports. Reading
-lists, decision histories, type-spec details live in reports or
-in `workspace/docs/workspace-manifest.md`; criome's architecture
-stays free of them.
+lists, decision histories, type-spec details live in reports;
+criome's architecture stays free of them.
 
 ---
 
@@ -120,9 +108,9 @@ relationship with rules").
 
 ---
 
-## Cross-references to workspace files
+## Cross-references between repos
 
-Reference workspace files by **prose**, not by deep github URL.
+Reference cross-repo files by **prose**, not by deep github URL.
 
 Cross-repo file URLs of the form
 `https://github.com/LiGoldragon/<repo>/blob/main/<path>` are
@@ -131,7 +119,7 @@ silently breaks and the reader follows it into a 404.
 
 Use one of these instead:
 - **Prose** — "criome's `ARCHITECTURE.md`" or "lore's `programming/abstractions.md`."
-  The reader is in the workspace and can navigate.
+  The reader can navigate to the named repo.
 - **Repo-level pointer** — `github:ligoldragon/<repo>` (nix-flake
   notation) for "this repo exists at that URL." It points at the
   repo, not a specific file inside it; renames within stay valid.
@@ -169,11 +157,11 @@ repo's role, this file for cross-project agent rules.
 
 ## Components, not monoliths
 
-The workspace is composed of **micro-components** — one capability
-per crate, per repo, per protocol. Each lives in its own repo
-with its own `Cargo.toml`, `flake.nix`, and tests; each fits in a
-single LLM context window; each speaks to its neighbors only
-through typed protocols.
+The sema-ecosystem is composed of **micro-components** — one
+capability per crate, per repo, per protocol. Each lives in its
+own repo with its own `Cargo.toml`, `flake.nix`, and tests; each
+fits in a single LLM context window; each speaks to its neighbors
+only through typed protocols.
 
 **Adding a feature defaults to a new crate, not editing an existing
 one.** The burden of proof is on the contributor (human or agent)
@@ -356,10 +344,10 @@ Acknowledgements, tool-result summaries, "done; pushed"
 confirmations don't need reports. Anything that explains,
 proposes, analyses, or summarises does.
 
-**Use relative paths in reports.** When a report references files
-in sibling repos, link via `../repos/<name>/...` (the workspace
-symlinks). The relative path resolves in editors and stays valid
-across repo renames.
+**Use prose pointers for cross-repo references in reports.** When
+a report references files in sibling repos, name the repo and the
+relative path within it (e.g., "criome's `src/forge/dispatcher.rs`")
+rather than embedding a github URL.
 
 ---
 

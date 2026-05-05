@@ -10,7 +10,7 @@ trimmed: dropped MCP JSON configuration, deep protocol details, and political/le
 
 A Go CLI (plus optional MCP server) that searches and downloads books and academic articles from Anna's Archive. Upstream binary is `annas-mcp`; our wrapper exposes it as `annas`. Most operations (all downloads) require an Anna's Archive API key, which in turn requires a paid donation/membership.
 
-## Setup (in our workspace)
+## Setup
 
 Nothing to install — `annas` is on `PATH` via the home profile. The wrapper transparently populates three env vars each invocation:
 

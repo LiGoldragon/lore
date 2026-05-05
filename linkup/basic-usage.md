@@ -10,7 +10,7 @@ trimmed: dropped pipx/brew install notes, `linkup setup` browser flow (our wrapp
 
 Linkup is a web-search API aimed at grounding LLMs — you send a query, you get back either a list of sources or a concise AI-written answer with citations. `linkup-cli` wraps the API for quick interactive queries from a terminal. Built on the `linkup-sdk` Python package.
 
-## Setup (in our workspace)
+## Setup
 
 `linkup` is on PATH via the home profile. The wrapper shell script sources `LINKUP_API_KEY` from gopass at `linkup.so/api-key` before exec'ing the real CLI, so you don't run `linkup setup` — the key is already there.
 

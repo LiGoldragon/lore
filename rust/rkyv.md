@@ -1,5 +1,5 @@
 ---
-source: (our own) — distilled from rkyv 0.8 source + workspace usage
+source: (our own) — distilled from rkyv 0.8 source + in-repo usage
 fetched: 2026-04-28
 ---
 

@@ -85,7 +85,7 @@ home-manager news                           # upstream news since last build
 - **Pinning not taking effect?** Re-run `nix flake lock --override-input <name> <url>` and read the relevant `nodes.<name>.locked` block in `flake.lock` to confirm the `rev`.
 - **Flake won't evaluate?** `nix flake check` surfaces eval errors across all outputs; `nix flake show` is lighter (just lists outputs, fails on the first broken one).
 
-## Operational rules for this workspace
+## Operational rules
 
 **Never reference raw `/nix/store/<hash>-<name>/...` paths in commands or output.** Store hashes change on every rebuild, so any recorded path becomes stale immediately; they're long and noisy; stable aliases exist for everything you need to point at.
 

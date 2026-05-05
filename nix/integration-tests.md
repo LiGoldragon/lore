@@ -1,5 +1,5 @@
 ---
-source: (our own — distilled from workspace/checks/ + workspace/lib/scenario.nix)
+source: (our own — distilled from prior nix-test scaffolding)
 fetched: 2026-04-28
 ---
 
@@ -43,7 +43,7 @@ against a fresh daemon process. Tests that *application
 state* survives clean shutdown and re-open. Use when:
 
 - Verifying a database file format is stable across daemon
-  restarts (this is what workspace's `scenario-chain` exercises)
+  restarts.
 - Schema migration testing: state-V1 → daemon v2 reads it →
   state-V2
 - Bootstrap-loop testing: criome v1 stores records → criome v2
@@ -57,8 +57,7 @@ version boundaries. Use when:
 
 - Verifying rkyv (or other binary) wire format is stable
   across process boundaries — bytes written to disk by one
-  process must decode in another (workspace's `roundtrip-chain`
-  exercises this with length-prefixed signal Frames)
+  process must decode in another.
 - Per-daemon-transformation isolation: parser bug, handler
   bug, renderer bug each fail the specific phase that
   produces them
@@ -232,9 +231,3 @@ under `lib/<name>.nix` and is exposed via
   does. Single-frame dispatchers use plain `fn main()`; the
   async runtime is for the long-running listener.
 
-## Reference implementations
-
-- `workspace/lib/scenario.nix` — daemon-mode step builder
-- `workspace/checks/scenario-*.nix` — daemon-mode chain (assert-node → query-nodes → chain)
-- `workspace/checks/roundtrip-*.nix` — binary-stability chain (parse → handle → render → assert)
-- `workspace/checks/integration.nix` — single-derivation monolithic shuttle (the simpler pattern)

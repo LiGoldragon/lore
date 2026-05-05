@@ -1,7 +1,7 @@
 ---
 source: our own — derived from /tmp/gascity/{docs,examples,internal} and field operation 2026-05-01
 fetched: 2026-05-01
-scope: how to operate a Gas City — start/stop, attach to agents, talk to them, recover from stuck states. Not architecture (see workspace/reports/126).
+scope: how to operate a Gas City — start/stop, attach to agents, talk to them, recover from stuck states. Not architecture.
 ---
 
 # gas-city basic usage
