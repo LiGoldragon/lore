@@ -189,7 +189,8 @@ executor components. Communicator components stay
 communicators; executor components stay executors.
 
 Full case (the catastrophic record of monolith collapse, the
-modern LLM-context argument): `programming/micro-components.md`.
+modern LLM-context argument): the workspace's
+`skills/micro-components.md`.
 
 ---
 
@@ -208,7 +209,7 @@ missing.
 
 ## Verb belongs to noun (thinking discipline)
 
-Read `programming/abstractions.md` before writing free
+Read the workspace's `skills/abstractions.md` before writing free
 functions. The discipline applies to any language with method
 dispatch: behavior lives on types, not as floating verbs. The
 rule's purpose is to force the question "what type owns this
@@ -218,32 +219,32 @@ noun is the load-bearing cognitive event.
 
 The rule has a sharper version: the verb belongs to **the
 right** noun, not just any nearby noun. Adjacency of *types*
-is not the same as adjacency of *concerns* — see
-`programming/abstractions.md` §"The wrong-noun trap."
+is not the same as adjacency of *concerns* — see the workspace's
+`skills/abstractions.md` §"The wrong-noun trap."
 
 ---
 
 ## Producers push, consumers subscribe
 
-Read `programming/push-not-pull.md`. Producers push state;
-consumers subscribe to a stream. The subscription primitive is
-the contract. When the primitive doesn't yet exist, the
-dependent real-time feature waits for it to land.
+Read the workspace's `skills/push-not-pull.md`. Producers push
+state; consumers subscribe to a stream. The subscription
+primitive is the contract. When the primitive doesn't yet
+exist, the dependent real-time feature waits for it to land.
 
 ---
 
 ## Naming — full English words
 
-Read `programming/naming.md`. Identifiers are read far more
-than they are written. Cryptic abbreviations optimize for the
-writer (a few keystrokes saved) at the reader's expense (one
-mental lookup per occurrence).
+Read the workspace's `skills/naming.md`. Identifiers are read
+far more than they are written. Cryptic abbreviations optimize
+for the writer (a few keystrokes saved) at the reader's expense
+(one mental lookup per occurrence).
 
 **Default: spell every identifier as full English words.**
 
 The canonical rule + the full table of common offenders + the
 six permitted exception classes + the "feels too verbose"
-anti-pattern all live in `programming/naming.md`.
+anti-pattern all live in the workspace's `skills/naming.md`.
 
 ---
 
@@ -486,16 +487,19 @@ based on verified upstream sources.
 - `nix/integration-tests.md` — chained-derivation patterns
   for daemon-stack tests.
 
-**Programming discipline (cross-language):**
-- workspace `skills/beauty.md` — Beauty as the criterion of
-  correctness *(migrated from lore 2026-05-06)*.
-- `programming/abstractions.md` — Where behavior lives. Every
+**Programming discipline (cross-language) — now in the workspace
+`skills/` directory:**
+- `skills/beauty.md` — Beauty as the criterion of correctness.
+- `skills/abstractions.md` — Where behavior lives. Every
   reusable verb belongs to a noun.
-- `programming/push-not-pull.md` — Producers push, consumers
+- `skills/push-not-pull.md` — Producers push, consumers
   subscribe.
-- `programming/micro-components.md` — One capability, one
-  crate, one repo.
-- `programming/naming.md` — Full English words.
+- `skills/micro-components.md` — One capability, one crate,
+  one repo.
+- `skills/naming.md` — Full English words.
+- `skills/rust-discipline.md` — Rust-specific application
+  (methods on types, no ZST holders, domain newtypes,
+  one-object in/out, error enums).
 
 **Language style:**
 - `rust/style.md` — Rust object style: methods on types, typed

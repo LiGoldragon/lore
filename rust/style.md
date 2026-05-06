@@ -5,6 +5,17 @@ fetched: 2026-04-23
 
 # Rust style
 
+> **The Rust discipline now lives in the workspace's
+> `skills/rust-discipline.md`.** That skill is what to read
+> before writing Rust: methods on types, no ZST holders, domain
+> newtypes, one-object in/out, error enums, ractor-as-default,
+> tests in separate files, naming.
+>
+> This file remains as toolchain reference: `Cargo.toml` shape,
+> cross-crate dependency mechanics, pin strategy, Nix-based test
+> wiring. The discipline sections below are the source the skill
+> was distilled from; they will trim once the skill stabilizes.
+
 ## The rules in one sentence
 
 **Behavior lives on types. Domain values are typed. Boundaries take and
