@@ -16,13 +16,17 @@ live in that repo's own `AGENTS.md`.
    shapes every decision. **Upstream of every other doc**; if a
    downstream doc conflicts with the intent, the downstream doc
    loses.
-2. **This file** (`lore/AGENTS.md`) — how agents work in the
+2. **The workspace orchestration protocol** — typically
+   `protocols/orchestration.md` at the workspace root. It states
+   how autonomous agents claim files, check BEADS tasks, and
+   avoid interfering with each other.
+3. **This file** (`lore/AGENTS.md`) — how agents work in the
    workspace.
-3. **The repo-specific `AGENTS.md`** of whatever repo you're
+4. **The repo-specific `AGENTS.md`** of whatever repo you're
    editing — repo-role + carve-outs only.
-4. **The repo's `ARCHITECTURE.md`** — what the repo is and how
+5. **The repo's `ARCHITECTURE.md`** — what the repo is and how
    it fits in.
-5. **The repo's `skills.md`** — what an agent needs to know to
+6. **The repo's `skills.md`** — what an agent needs to know to
    be effective in *this* repo (project-specific intent,
    invariants about how to work, pointers to neighboring
    skills). Increasingly canonical.
@@ -72,6 +76,7 @@ root before the first commit.
 | Where | What |
 |---|---|
 | Workspace `ESSENCE.md` / `INTENTION.md` | **The intent.** What the work is for, the deepest value, the priorities. Upstream of everything else. |
+| Workspace `protocols/<name>.md` | **Coordination protocols.** How autonomous agents share workspace state, claim scopes, check BEADS, and hand off blocked work. |
 | Workspace `skills/<name>.md` | **Cross-cutting agent skills.** How to act on routine obstacles, how to edit skill files, etc. One capability per file. |
 | `lore/AGENTS.md` (this file) | **Workspace agent contract.** How agents work across repos. |
 | Project-wide canonical doc | **Project-wide invariants.** Prose + diagrams. The high-level shape, the relationships of the engine being built. |
@@ -381,7 +386,7 @@ How to apply:
 
 ---
 
-## Version control: always push
+## Version control: Git-backed Jujutsu
 
 After every change in any tracked repo, push immediately.
 **Blanket authorization** — proceed without asking for
@@ -394,9 +399,18 @@ jj commit -m '<msg>' && jj bookmark set main -r @- && jj git push --bookmark mai
 Push per logical commit. Unpushed work is invisible to other
 machines and to anyone consuming the repo as an input.
 
-Use `jj` for VCS where colocated; plain `git` where the repo
-isn't jj-initialized. Don't change a repo's VCS layout without
-the user's explicit decision.
+Li repositories and forks are Git-backed colocated Jujutsu
+repositories. If a Git-backed Li repo is not JJ-initialized,
+claim the repo through the workspace orchestration protocol and
+run `jj git init --colocate`.
+
+Use `jj` for VCS work: status, diff, commit, rebase,
+cherry-pick, merge, undo, and push. Use plain `git` for remote
+configuration and for tooling that needs Git directly. The
+reason is structural: Jujutsu makes the working copy a change,
+gives changes stable change IDs, and makes rebases,
+cherry-picks, and merges operate on those changes. Git remains
+the storage and remote compatibility layer.
 
 ---
 

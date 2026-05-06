@@ -12,6 +12,17 @@ The working copy IS a commit, called `@`. jj auto-snapshots `@` on every jj comm
 
 A normal session: edit files → run `jj commit -m "..."` → jj finalizes `@` with the description and starts a fresh empty `@` on top. Repeat.
 
+In Li repositories and forks, the standard layout is Git-backed colocation:
+`.jj/` sits beside `.git/`, Jujutsu owns local history work, and Git remains the
+remote/storage compatibility layer. If a Li repo has `.git/` but lacks `.jj/`,
+claim the repo through the workspace orchestration protocol and run `jj git
+init --colocate`.
+
+This is why we use Jujutsu: change IDs name changes instead of low-level Git
+commit objects, so rebase, cherry-pick, merge, edit, and undo operations stay
+attached to the diff the agent means to move. Git remains available underneath
+for remotes and tools, but daily reasoning happens at the change level.
+
 ## Status & log
 
 ```
