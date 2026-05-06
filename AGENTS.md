@@ -22,6 +22,10 @@ live in that repo's own `AGENTS.md`.
    editing — repo-role + carve-outs only.
 4. **The repo's `ARCHITECTURE.md`** — what the repo is and how
    it fits in.
+5. **The repo's `skills.md`** — what an agent needs to know to
+   be effective in *this* repo (project-specific intent,
+   invariants about how to work, pointers to neighboring
+   skills). Increasingly canonical.
 
 A new agent entering the workspace reads (1) before making any
 decisions; it is upstream of every rule below.
@@ -68,9 +72,11 @@ root before the first commit.
 | Where | What |
 |---|---|
 | Workspace `ESSENCE.md` / `INTENTION.md` | **The intent.** What the work is for, the deepest value, the priorities. Upstream of everything else. |
+| Workspace `skills/<name>.md` | **Cross-cutting agent skills.** How to act on routine obstacles, how to edit skill files, etc. One capability per file. |
 | `lore/AGENTS.md` (this file) | **Workspace agent contract.** How agents work across repos. |
 | Project-wide canonical doc | **Project-wide invariants.** Prose + diagrams. The high-level shape, the relationships of the engine being built. |
 | `<repo>/ARCHITECTURE.md` | **Per-repo bird's-eye view.** Repo's role, owned-and-not-owned boundaries, code map, status. Points at the project-wide doc by prose for cross-cutting context. |
+| `<repo>/skills.md` | **What an agent needs to know to work in this repo.** Project-specific intent, invariants about how to work, pointers to neighboring skills. Cross-references to other repos' `skills.md` are by repo name (e.g. "criome's `skills.md`"), never by HTTPS URL. |
 | `<repo>/reports/NNN-*.md` | **Decision records + design syntheses.** Prose + visuals. |
 | Each repo's source | **Implementation.** Code, tests, build files. Type sketches as compiler-checked skeletons live here. |
 
