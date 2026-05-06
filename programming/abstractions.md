@@ -228,22 +228,24 @@ adjacency of *concerns*.
 Concrete shape — two proc-macro crates sitting close together:
 
 ```
-   nota-derive                signal-derive
-   ────────────────────       ─────────────────────────
+   text-codec-derive          schema-derive
+   ─────────────────────      ──────────────────────
    concern: text              concern: schema
-     encode/decode              introspection
+     encode / decode            introspection over
+                                record types
    verbs:                     verbs:
-     emit codec impls           emit schema descriptors
-                                over signal record types
+     emit codec impls           emit per-kind schema
+                                descriptors
 ```
 
-Both crates touch the same underlying Rust types — nota-codec
-consumes signal records as its input. The temptation is to put
-schema introspection into nota-derive "because it already sees
-the types." That puts the verb (introspecting signal types) on
-the wrong noun (the text codec). The right noun is signal-derive,
-because schema introspection is *signal's* concern; the codec is
-downstream of signal, not the other way around.
+Both crates touch the same underlying record types — the text
+codec consumes records as its input. The temptation is to put
+schema introspection into text-codec-derive "because it already
+sees the types." That puts the verb (introspecting record types)
+on the wrong noun (the text codec). The right noun is
+schema-derive, because schema introspection is the *schema's*
+concern; the codec is downstream of the schema, not the other
+way around.
 
 The diagnostic, when finding the noun: if the answer sounds like
 *"well, this nearby type **could** hold it,"* slow down. The

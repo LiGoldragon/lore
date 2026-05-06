@@ -41,5 +41,5 @@ tell when to refresh against upstream.
 - Splittable per-topic means `Read --offset --limit` targets the relevant section only.
 - Git history of edits = audit of what we learned when.
 
-Pointer memories in bd (e.g. `bd-global memories`) should reference files
-here by path rather than inline the content.
+Pointer memories in tracked-item stores should reference files here by path
+rather than inline the content.
