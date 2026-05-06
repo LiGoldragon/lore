@@ -1,5 +1,5 @@
 ---
-source: (our own — distilled from prior nix-test scaffolding)
+source: (our own)
 fetched: 2026-04-28
 ---
 
@@ -45,9 +45,9 @@ state* survives clean shutdown and re-open. Use when:
 - Verifying a database file format is stable across daemon
   restarts.
 - Schema migration testing: state-V1 → daemon v2 reads it →
-  state-V2
-- Bootstrap-loop testing: criome v1 stores records → criome v2
-  (a different binary build) reads them
+  state-V2.
+- Bootstrap-loop testing: engine v1 stores records → engine v2
+  (a different binary build) reads them.
 
 **Binary-stability chain — per-transformation isolation.**
 Each step runs ONE one-shot binary, capturing its raw byte
@@ -55,14 +55,14 @@ output. The next step consumes those bytes as input. Tests
 that *binary serialisation* is stable across process and
 version boundaries. Use when:
 
-- Verifying rkyv (or other binary) wire format is stable
+- Verifying that a binary wire format (rkyv, etc.) is stable
   across process boundaries — bytes written to disk by one
   process must decode in another.
 - Per-daemon-transformation isolation: parser bug, handler
   bug, renderer bug each fail the specific phase that
-  produces them
+  produces them.
 - Cross-version binary compatibility: producer-version A,
-  consumer-version B
+  consumer-version B.
 
 The two patterns are complementary. Daemon-mode tests the
 *application contract*; binary-stability tests the *wire
@@ -75,9 +75,13 @@ graph in a sandbox, pipes user-text through a CLI, captures
 both the rendered reply text and the resulting state file
 into the step's `$out`.
 
+Substitute your real daemon and CLI names for `engine`,
+`frontend`, `frontend-cli`. The state file's name (`state.db`
+below) is whatever your engine writes.
+
 ```nix
 # lib/scenario.nix
-{ pkgs, criome, nexus, nexus-cli }:
+{ pkgs, engine, frontend, frontend-cli }:
 
 { name, input, priorState ? null }:
 
@@ -86,34 +90,34 @@ pkgs.runCommand name { } ''
   cd $TMPDIR
 
   ${pkgs.lib.optionalString (priorState != null)
-    "install -m 644 ${priorState}/state.redb sema.redb"}
+    "install -m 644 ${priorState}/state.db state.db"}
 
   cleanup() {
-    kill ''${nexus_pid:-} ''${criome_pid:-} 2>/dev/null || true
-    wait ''${nexus_pid:-} ''${criome_pid:-} 2>/dev/null || true
+    kill ''${frontend_pid:-} ''${engine_pid:-} 2>/dev/null || true
+    wait ''${frontend_pid:-} ''${engine_pid:-} 2>/dev/null || true
   }
   trap cleanup EXIT
 
-  CRIOME_SOCKET=$PWD/criome.sock SEMA_PATH=$PWD/sema.redb \
-    ${criome}/bin/criome-daemon &
-  criome_pid=$!
-  for i in $(seq 1 50); do [ -S "$PWD/criome.sock" ] && break; sleep 0.1; done
+  ENGINE_SOCKET=$PWD/engine.sock STATE_PATH=$PWD/state.db \
+    ${engine}/bin/engine-daemon &
+  engine_pid=$!
+  for i in $(seq 1 50); do [ -S "$PWD/engine.sock" ] && break; sleep 0.1; done
 
-  NEXUS_SOCKET=$PWD/nexus.sock CRIOME_SOCKET=$PWD/criome.sock \
-    ${nexus}/bin/nexus-daemon &
-  nexus_pid=$!
-  for i in $(seq 1 50); do [ -S "$PWD/nexus.sock" ] && break; sleep 0.1; done
+  FRONTEND_SOCKET=$PWD/frontend.sock ENGINE_SOCKET=$PWD/engine.sock \
+    ${frontend}/bin/frontend-daemon &
+  frontend_pid=$!
+  for i in $(seq 1 50); do [ -S "$PWD/frontend.sock" ] && break; sleep 0.1; done
 
   echo ${pkgs.lib.escapeShellArg input} | \
-    NEXUS_SOCKET=$PWD/nexus.sock ${nexus-cli}/bin/nexus > response.txt
+    FRONTEND_SOCKET=$PWD/frontend.sock ${frontend-cli}/bin/frontend > response.txt
 
   # Stop daemons cleanly so state flushes.
-  kill $nexus_pid; wait $nexus_pid 2>/dev/null || true
-  kill $criome_pid; wait $criome_pid 2>/dev/null || true
+  kill $frontend_pid; wait $frontend_pid 2>/dev/null || true
+  kill $engine_pid; wait $engine_pid 2>/dev/null || true
 
   mkdir -p $out
   cp response.txt $out/response.txt
-  cp sema.redb    $out/state.redb
+  cp state.db     $out/state.db
 ''
 ```
 
@@ -121,17 +125,20 @@ A leaf check then chains steps + asserts:
 
 ```nix
 let
-  step = flake.lib.scenario { inherit pkgs; criome = ...; nexus = ...; nexus-cli = ...; };
-  assertNode = step { name = "assert-node"; input = ''(Node "User")''; };
-  queryNodes = step {
-    name       = "query-nodes";
-    input      = ''(| Node @name |)'';
-    priorState = assertNode;        # ← state.redb chains forward
+  step = flake.lib.scenario {
+    inherit pkgs;
+    engine = ...; frontend = ...; frontend-cli = ...;
+  };
+  firstStep = step { name = "first-step"; input = ''<your input>''; };
+  secondStep = step {
+    name       = "second-step";
+    input      = ''<your input>'';
+    priorState = firstStep;        # ← state.db chains forward
   };
 in
 pkgs.runCommand "scenario-chain" { } ''
-  grep -qE '^\(Ok\)$' ${assertNode}/response.txt || exit 1
-  grep -qE '^\[\(Node "User"\)\]$' ${queryNodes}/response.txt || exit 1
+  grep -qE '<expected output regex>' ${firstStep}/response.txt  || exit 1
+  grep -qE '<expected output regex>' ${secondStep}/response.txt || exit 1
   touch $out
 ''
 ```
@@ -140,18 +147,17 @@ pkgs.runCommand "scenario-chain" { } ''
 
 For per-daemon-transformation testing, each step runs ONE
 one-shot binary. The daemons need to expose a one-shot mode
-— `<crate>-<verb>` binaries that read stdin and write stdout
-(e.g. `nexus-parse`, `nexus-render`, `criome-handle-frame`).
+— `<crate>-<verb>` binaries that read stdin and write stdout.
 
 ```nix
 # checks/roundtrip-parse.nix
 { pkgs, inputs, system, ... }:
 let
-  nexus = inputs.nexus.packages.${system}.default;
-  input = pkgs.writeText "input" ''(Node "User")'';
+  frontend = inputs.frontend.packages.${system}.default;
+  input = pkgs.writeText "input" ''<your input>'';
 in
 pkgs.runCommand "roundtrip-parse" { } ''
-  ${nexus}/bin/nexus-parse < ${input} > frame.bin
+  ${frontend}/bin/frontend-parse < ${input} > frame.bin
   mkdir -p $out
   cp frame.bin $out/frame.bin
 ''
@@ -159,26 +165,26 @@ pkgs.runCommand "roundtrip-parse" { } ''
 # checks/roundtrip-handle.nix
 { pkgs, inputs, system, flake, ... }:
 let
-  criome = inputs.criome.packages.${system}.default;
+  engine = inputs.engine.packages.${system}.default;
   parsed = flake.checks.${system}.roundtrip-parse;
 in
 pkgs.runCommand "roundtrip-handle" { } ''
   cd $TMPDIR
-  SEMA_PATH=$PWD/sema.redb \
-    ${criome}/bin/criome-handle-frame < ${parsed}/frame.bin > reply.bin
+  STATE_PATH=$PWD/state.db \
+    ${engine}/bin/engine-handle-frame < ${parsed}/frame.bin > reply.bin
   mkdir -p $out
   cp reply.bin   $out/reply.bin
-  cp sema.redb   $out/state.redb
+  cp state.db    $out/state.db
 ''
 
 # checks/roundtrip-render.nix
 { pkgs, inputs, system, flake, ... }:
 let
-  nexus   = inputs.nexus.packages.${system}.default;
-  handled = flake.checks.${system}.roundtrip-handle;
+  frontend = inputs.frontend.packages.${system}.default;
+  handled  = flake.checks.${system}.roundtrip-handle;
 in
 pkgs.runCommand "roundtrip-render" { } ''
-  ${nexus}/bin/nexus-render < ${handled}/reply.bin > output.txt
+  ${frontend}/bin/frontend-render < ${handled}/reply.bin > output.txt
   mkdir -p $out
   cp output.txt $out/output.txt
 ''
@@ -205,7 +211,7 @@ that when you need the localisation or the cache-by-phase.
 
 ## Blueprint discovery
 
-Per `lore/rust/nix-packaging.md`, blueprint
+Per [`rust/nix-packaging.md`](../rust/nix-packaging.md), blueprint
 auto-discovers `.nix` files under `checks/` as flake outputs.
 Cross-references between checks use `flake.checks.${system}.<name>`
 inside the receiving file's `let` block — no `import` needed
@@ -230,4 +236,3 @@ under `lib/<name>.nix` and is exposed via
 - **One-shot binaries don't need tokio** even if the daemon
   does. Single-frame dispatchers use plain `fn main()`; the
   async runtime is for the long-running listener.
-
