@@ -137,8 +137,8 @@ let
   cargoVendorDir = craneLib.vendorCargoDeps {
     inherit src;
     outputHashes = {
-      "git+https://github.com/LiGoldragon/horizon-rs#5b134d94ad5377f653fb26eb151ca583f24642fa" =
-        "sha256-SuineiVnWxzd0sCtGsGB+FPCZDIVquC1lgx1qT9plfk=";
+      "git+https://github.com/<org>/<sibling-crate>#<full-rev>" =
+        "sha256-<expected-hash-from-first-build-error>";
     };
   };
   commonArgs = {
@@ -167,8 +167,8 @@ crane builds all members at once by default. Filter to one binary with
 ```nix
 craneLib.buildPackage (commonArgs // {
   inherit cargoArtifacts;
-  cargoExtraArgs = "--bin forge";
-  pname = "forge";
+  cargoExtraArgs = "--bin <bin-name>";
+  pname = "<bin-name>";
 })
 ```
 

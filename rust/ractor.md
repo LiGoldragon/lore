@@ -1,15 +1,13 @@
 ---
-source: (our own) — distilled from /home/li/git/criome/src/ and ractor 0.15.6 upstream
+source: (our own) — distilled from working daemon code and ractor 0.15.6 upstream
 fetched: 2026-04-28
 ---
 
-# Ractor in CANON projects
+# Ractor — daemon actor framework
 
 [`ractor`](https://crates.io/crates/ractor) is the actor framework for any
-CANON daemon with state and a message protocol. See [`style.md` §Actors](style.md#actors-logical-units-with-ractor)
-for *when* to reach for one; this doc is *how*. For a current working example,
-read the actor files under criome's
-`src/` — every pattern below appears there.
+daemon with state and a message protocol. See [`style.md` §Actors](style.md#actors-logical-units-with-ractor)
+for *when* to reach for one; this doc is *how*.
 
 ## Cargo.toml
 
@@ -237,5 +235,4 @@ impl Daemon {
 
 - [`style.md` §Actors](style.md#actors-logical-units-with-ractor) — when to reach for one
 - [`programming/abstractions.md`](../programming/abstractions.md) — methods-on-types
-- criome's `src/` — current working example of every pattern above
 - [ractor 0.15 docs](https://docs.rs/ractor/0.15) · [supervisor example](https://github.com/slawlor/ractor/blob/v0.15.6/ractor/examples/supervisor.rs)

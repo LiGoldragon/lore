@@ -3,12 +3,13 @@ source: (our own) — distilled from rkyv 0.8 source + in-repo usage
 fetched: 2026-04-28
 ---
 
-# Rkyv in CANON projects
+# Rkyv — binary contract format
 
 [`rkyv`](https://crates.io/crates/rkyv) 0.8 is the binary contract format
 between Rust components: storage (zero-copy reads), wire envelopes, IPC,
-durable records. Plain text formats use `nota-codec`.
-Serde appears only at external boundaries that demand it (legacy JSON).
+durable records. Plain text formats use a single chosen typed text codec
+(one project-wide decoder/encoder pair). Serde appears only at external
+boundaries that demand it (legacy JSON).
 
 ## The canonical feature set
 
@@ -137,4 +138,4 @@ typically a 4-byte big-endian length prefix per archived frame.
 ## See also
 
 - [rkyv 0.8 docs](https://docs.rs/rkyv/0.8) — full API reference
-- [`style.md` §Serialization](style.md) — when to reach for rkyv vs nota-codec vs serde
+- [`style.md` §Serialization](style.md) — when to reach for rkyv vs a text codec vs serde

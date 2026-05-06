@@ -422,8 +422,8 @@ Common offenders to spell out:
    `Arc`, `Rc`, `Box`, `Cell`, `RefCell`, `Mutex`, `mpsc`, `regex`. Don't
    rename these; do *not* extend the abbreviation pattern to your own
    types.
-6. **Domain-standard short names already documented in an
-   `ARCHITECTURE.md`.** `slot`, `opus`, `node`, `frame` are full words
+6. **Domain-standard short names already documented in your
+   `ARCHITECTURE.md`.** `slot`, `node`, `frame` are full words
    and need no exception. If a true short form is load-bearing in the
    schema, name it in `ARCHITECTURE.md` so the exception is explicit;
    otherwise spell it out.
@@ -510,15 +510,12 @@ message protocol. The per-actor overhead is negligible on modern
 hardware, and the discipline (typed messages, owned state,
 supervision trees) pays back immediately — you never end up
 retrofitting concurrency later. Ractor pulls tokio in; that's
-acceptable everywhere, which is why "`tokio` only where async
-I/O actually matters" above is a historical constraint being
-relaxed: for daemons and structured services, tokio via ractor
-is just the runtime.
+acceptable everywhere — for daemons and structured services,
+tokio via ractor is just the runtime.
 
 For the *how* — the per-file four-piece template, perfect-
 specificity messages, supervision, self-cast loops, and the
-sync-façade pattern — see `ractor.md`, grounded
-in the criome example.
+sync-façade pattern — see `ractor.md`.
 
 Plain sync code is fine for one-shot CLIs, build tools, and
 library crates with no concurrent state.
@@ -531,12 +528,11 @@ NixOS-platform repo's `packages/`).
 
 ```
 # Right
-github:LiGoldragon/clavifaber       — its own repo
-github:LiGoldragon/brightness-ctl   — its own repo
-github:LiGoldragon/horizon-rs       — its own workspace repo
+github:<org>/<rust-tool>            — its own repo
+github:<org>/<another-rust-tool>    — its own repo
 
 # Wrong
-CriomOS/packages/brightness-ctl/    — Rust crate inlined in a Nix repo
+nixos-platform/packages/<rust-tool>/  — Rust crate inlined in a Nix repo
 ```
 
 Why: a Rust crate has its own toolchain pin, its own Cargo lockfile, its
@@ -656,13 +652,12 @@ don't `#[ignore]` without filing.
   deployment concern, not a source-layout concern. Each crate that
   compiles to an artifact (library or binary) lives in its own
   git repo with its own `Cargo.toml`, `flake.nix`, `rust-toolchain.toml`,
-  `.gitignore`, and `LICENSE.md`. Upstream at
-  `github.com/LiGoldragon/<name>`.
-- Serialization: `rkyv` for binary contracts between our Rust
-  components (storage, zero-copy reads); `serde` only at external
-  boundaries that demand it (e.g., JSON for legacy interop).
-  Internal text formats use `nota-codec`'s
-  typed `Decoder` + `Encoder`, not serde.
+  `.gitignore`, and `LICENSE.md`.
+- Serialization: `rkyv` for binary contracts between Rust components
+  (storage, zero-copy reads); `serde` only at external boundaries
+  that demand it (e.g., JSON for legacy interop). Internal text
+  formats use a single chosen typed text codec (one project-wide
+  decoder/encoder pair), not serde.
 - `tokio` comes in automatically via ractor for any service with
   concurrent state. Plain sync is fine for one-shot CLIs and
   library crates.
@@ -693,7 +688,7 @@ consume it via git URL:
 ```toml
 # dependent crate's Cargo.toml
 [dependencies]
-sibling-crate = { git = "https://github.com/LiGoldragon/sibling-crate.git" }
+sibling-crate = { git = "https://github.com/<org>/sibling-crate.git" }
 ```
 
 Cargo.lock pins the resolved commit. For `nix flake check` to
@@ -728,7 +723,7 @@ M0/M1-era cross-crate deps is `branch = "main"`.
 
 ```toml
 # Default for fast-moving sibling deps:
-sibling-crate = { git = "https://github.com/LiGoldragon/sibling-crate.git", branch = "main" }
+sibling-crate = { git = "https://github.com/<org>/sibling-crate.git", branch = "main" }
 ```
 
 ## Documentation
