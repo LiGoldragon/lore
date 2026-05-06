@@ -195,9 +195,9 @@ modern LLM-context argument): `programming/micro-components.md`.
 
 ## Beauty is the criterion
 
-Read `programming/beauty.md`. Beauty is the test of correctness
-— **ugly code is evidence that the underlying problem is
-unsolved**.
+Read the workspace's `skills/beauty.md`. Beauty is the test of
+correctness — **ugly code is evidence that the underlying
+problem is unsolved**.
 
 The aesthetic discomfort *is* the diagnostic reading. When
 something feels ugly, slow down and find the structure that
@@ -487,8 +487,8 @@ based on verified upstream sources.
   for daemon-stack tests.
 
 **Programming discipline (cross-language):**
-- `programming/beauty.md` — Beauty as the criterion of
-  correctness.
+- workspace `skills/beauty.md` — Beauty as the criterion of
+  correctness *(migrated from lore 2026-05-06)*.
 - `programming/abstractions.md` — Where behavior lives. Every
   reusable verb belongs to a noun.
 - `programming/push-not-pull.md` — Producers push, consumers
