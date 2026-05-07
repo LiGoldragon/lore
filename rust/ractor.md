@@ -137,12 +137,17 @@ the daemon root and the reader-pool parent (a dead reader is fatal). Wrong for
 the per-connection-spawning Listener — override to log and continue:
 
 ```rust
-async fn handle_supervisor_evt(&self, _myself: ActorRef<Self::Msg>,
-    event: SupervisionEvent, _state: &mut State)
-    -> std::result::Result<(), ActorProcessingErr>
-{
+async fn handle_supervisor_evt(
+    &self,
+    _myself: ActorRef<Self::Msg>,
+    event: SupervisionEvent,
+    _state: &mut State,
+) -> std::result::Result<(), ActorProcessingErr> {
     if let SupervisionEvent::ActorFailed(actor, reason) = event {
-        eprintln!("daemon: connection {actor:?} failed: {reason}");
+        let label = actor
+            .get_name()
+            .unwrap_or_else(|| format!("{:?}", actor.get_id()));
+        eprintln!("daemon: connection {label} failed: {reason}");
     }
     Ok(())
 }
@@ -204,15 +209,125 @@ self.workers.get(index)
 `Arc<Mutex<T>>` between actors is the smell; an uncontended atomic counter is
 a coordination atom, not shared state in the dangerous sense.
 
+## Pool initialization in `pre_start`
+
+The full daemon-bootstrap pattern: open the shared resource, derive the
+pool size from it, spawn singletons and the pool together, return State
+that carries everything the rest of the system needs. No mid-flight
+spawning; the topology is fixed once `pre_start` returns.
+
+```rust
+async fn pre_start(
+    &self,
+    myself: ActorRef<Self::Msg>,
+    arguments: Arguments,
+) -> std::result::Result<Self::State, ActorProcessingErr> {
+    // open the shared resource the pool will read from
+    let store = Arc::new(Store::open(&arguments.store_path)?);
+    let reader_count = store.config().reader_count();
+
+    // spawn the singleton writer
+    let (engine, _engine_handle) = Actor::spawn_linked(
+        Some("engine".into()),
+        engine::Engine,
+        engine::Arguments { store: Arc::clone(&store) },
+        myself.get_cell(),
+    ).await?;
+
+    // spawn N readers
+    let mut readers = Vec::with_capacity(reader_count);
+    for index in 0..reader_count {
+        let (reader, _handle) = Actor::spawn_linked(
+            Some(format!("reader-{index}")),
+            reader::Reader,
+            reader::Arguments { store: Arc::clone(&store) },
+            myself.get_cell(),
+        ).await?;
+        readers.push(reader);
+    }
+
+    // spawn the listener that hands out reader refs to per-connection actors
+    let reader_cursor = Arc::new(AtomicUsize::new(0));
+    let (_listener, _) = Actor::spawn_linked(
+        Some("listener".into()),
+        listener::Listener,
+        listener::Arguments {
+            socket_path: arguments.socket_path,
+            engine: engine.clone(),
+            readers: readers.clone(),
+            reader_cursor: Arc::clone(&reader_cursor),
+        },
+        myself.get_cell(),
+    ).await?;
+
+    Ok(State { store, engine, readers, reader_cursor })
+}
+```
+
+The State returned from `pre_start` is the daemon's runtime
+topology. Children have all their refs from `Arguments`; the
+parent's State holds clones for the lifetime of the daemon.
+
 ## Sync façade on `State`
 
 When the crate ships a one-shot CLI binary or wants tests without a tokio
 runtime, expose the dispatch as inherent methods on `State`. The async
-`handle` and the sync façade share the same per-verb method implementations
-— no duplication.
+`handle` is a thin shell; `State` carries the real method, sync and total.
+Tests call `State` directly — no actor harness, no tokio runtime, no
+mocking.
+
+```rust
+// reconciler.rs — the actor side is a shell
+async fn handle(
+    &self,
+    _myself: ActorRef<Self::Msg>,
+    message: Message,
+    state: &mut State,
+) -> std::result::Result<(), ActorProcessingErr> {
+    match message {
+        Message::Run => {
+            let _ = state.apply();
+        }
+    }
+    Ok(())
+}
+
+// State has the real method
+impl State {
+    pub fn apply(&mut self) -> Result<(), Error> {
+        let result = self.apply_inner();
+        self.phase = match &result {
+            Ok(()) => Phase::Settled,
+            Err(_) => Phase::Failed,
+        };
+        result
+    }
+
+    fn apply_inner(&mut self) -> Result<(), Error> { … }
+}
+```
+
+```rust
+// tests/reconciler.rs — direct, no runtime
+struct Fixture { arguments: reconciler::Arguments }
+
+impl Fixture {
+    fn apply(&self) -> Result<(), Error> {
+        State::new(self.arguments.clone()).apply()
+    }
+}
+
+#[test]
+fn applies_a_proposal_to_a_target_file() {
+    let fixture = Fixture { arguments: … };
+    fixture.apply().unwrap();
+    // assert the side effect on disk
+}
+```
 
 Add a façade only when there's a non-actor consumer (binary, tests). Don't
-manufacture one for ceremony.
+manufacture one for ceremony. The façade and the actor share *the same*
+per-verb method implementations on `State` — no duplication.
 
 ## Daemon entry point
 
@@ -230,6 +345,65 @@ impl Daemon {
     }
 }
 ```
+
+## Handle wrappers — the consumer's surface
+
+Every actor pairs with a `*Handle` struct that owns the spawn
+result (`ActorRef + JoinHandle`) and exposes a `start(Arguments)`
+constructor. **Consumers reach for the `*Handle`, never bare
+`Actor::spawn`.** This makes spawning a typed verb on the actor's
+type, keeps consumers from accidentally spawning unsupervised, and
+gives one place to attach a `wait()` / `stop()` surface.
+
+```rust
+pub struct SupervisorHandle {
+    actor_ref: ActorRef<supervisor::Message>,
+    join_handle: tokio::task::JoinHandle<()>,
+}
+
+impl SupervisorHandle {
+    pub async fn start(arguments: supervisor::Arguments) -> Result<Self> {
+        let (actor_ref, join_handle) = Actor::spawn(
+            Some("supervisor".to_string()),
+            supervisor::Supervisor,
+            arguments,
+        )
+        .await
+        .map_err(|error| Error::ActorSpawn(error.to_string()))?;
+
+        Ok(Self { actor_ref, join_handle })
+    }
+
+    pub fn actor_ref(&self) -> &ActorRef<supervisor::Message> {
+        &self.actor_ref
+    }
+
+    pub async fn wait(self) -> std::result::Result<(), tokio::task::JoinError> {
+        self.join_handle.await
+    }
+}
+```
+
+Naming: `EngineHandle`, `SupervisorHandle`, `ReaderHandle`,
+`ListenerHandle`. The `*Handle` suffix is the convention; the
+bare name (`Engine`, `Supervisor`) stays the actor's behavior
+ZST. Together the file exports five pieces:
+
+```rust
+pub struct Engine;            // ZST behaviour marker
+pub struct State { ... }      // owned state, private fields
+pub struct Arguments { ... }  // pre_start input (only struct with pub fields)
+pub enum Message { ... }      // per-verb typed messages
+pub struct EngineHandle { … } // consumer surface
+```
+
+The four-piece-per-file rule (above, "Four pieces per file") is
+the actor's *internal* shape; `*Handle` is the *external* surface.
+Both ship from the same file.
+
+The root daemon's `*Handle::start` is the only place bare
+`Actor::spawn` is called; every other spawn goes through
+`Actor::spawn_linked` from inside a parent's `pre_start`.
 
 ## See also
 

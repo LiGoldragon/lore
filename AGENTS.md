@@ -483,10 +483,14 @@ based on verified upstream sources.
 - `rust/nix-packaging.md` — Canonical crane + fenix flake
   layout for Rust crates.
 - `rust/ractor.md` — Ractor 0.15 in daemons: per-file
-  four-piece template, per-verb typed messages.
+  four-piece template, `*Handle` consumer surface, per-verb
+  typed messages, pool initialization, sync façade.
 - `rust/rkyv.md` — Rkyv 0.8 portable feature set,
   derive-alias pattern, encode/decode API, schema-fragility
   limit.
+- `rust/testing.md` — testing patterns: sync façade on State,
+  tests in separate files, tempfile, two-process integration
+  via `CARGO_BIN_EXE_*`, when to test actors directly.
 
 **Data / issues:**
 - `bd/basic-usage.md` — bd (beads) daily loop.
