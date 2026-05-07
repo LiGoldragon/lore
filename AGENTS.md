@@ -357,6 +357,14 @@ don't apologise, don't pre-announce what you're about to do.
 The chat reply is for what changed and what's next. The *how*
 and the *why* belong in the report, not in chat.
 
+**Always name the report path when referencing a report.**
+"Two reports landed" without paths makes the human guess.
+"Two reports landed: `reports/designer/2026-05-07-X.md` and
+`reports/designer/2026-05-07-Y.md`" lets the human navigate.
+Same rule for any file the chat-reply refers the human to —
+name it explicitly with its path. The chat is a navigation
+surface, not a teaser.
+
 **Use relative paths in reports.** When a report references
 files in sibling repos, link via `../<repo>/...` (the
 workspace symlinks). The relative path resolves in editors and
