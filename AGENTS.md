@@ -307,68 +307,15 @@ How to apply:
 
 ---
 
-## Design reports — visuals, not code
+## Reporting
 
-Reports in the `reports/` dir of the repo you are working in
-explain, propose, analyse, or summarise. Their medium is
-**prose + visuals** — ASCII diagrams, swimlanes, flowcharts,
-tables, dependency graphs. Implementation code (Rust `impl`
-blocks, function bodies, struct definitions with methods, full
-Nix derivations) belongs in skeleton code in the relevant
-repo, not in a report.
-
-**Why:** code in a design doc goes stale the moment it lands
-and the real type drifts; readers can't tell whether the
-report's snippet or the repo's actual type is authoritative;
-visual shapes carry the same information without that
-freshness trap.
-
-**Test:** if the report has more than a couple of lines that
-look like Rust / Python / Nix implementation, refactor those
-into a visual.
-
-**The narrow allowance:** a few-line *sample* of the surface
-the design talks about — a snippet of a config file showing
-its shape, a one-line CLI invocation, a single field
-declaration to anchor a name — is fine. The rule is about
-implementation blocks, not about showing the shape of the
-thing the design is about.
-
----
-
-## Session-response style — substance goes in reports
-
-If the agent's final-session response would be more than very
-minimal (a few lines), write the substance as a report (in the
-`reports/` dir of the repo you are working in) and keep the
-chat reply minimal — a one-line pointer at the report. Two
-reasons: (1) chat UIs are poor reading interfaces; files are
-easier; (2) the author reviews responses asynchronously while
-the agent moves to next work, so the substance must be in a
-stable, scrollable, file-backed place.
-
-Small reports are fine — the report doesn't have to be large.
-Acknowledgements, tool-result summaries, "done; pushed"
-confirmations don't need reports. Anything that explains,
-proposes, analyses, or summarises does.
-
-**Tone in chat replies: state results.** Don't narrate process,
-don't apologise, don't pre-announce what you're about to do.
-The chat reply is for what changed and what's next. The *how*
-and the *why* belong in the report, not in chat.
-
-**Always name the report path when referencing a report.**
-"Two reports landed" without paths makes the human guess.
-"Two reports landed: `reports/designer/2026-05-07-X.md` and
-`reports/designer/2026-05-07-Y.md`" lets the human navigate.
-Same rule for any file the chat-reply refers the human to —
-name it explicitly with its path. The chat is a navigation
-surface, not a teaser.
-
-**Use relative paths in reports.** When a report references
-files in sibling repos, link via `../<repo>/...` (the
-workspace symlinks). The relative path resolves in editors and
-stays valid across repo renames.
+The reporting discipline — when to write a report vs answer
+in chat, where reports live, the prose-plus-visuals medium,
+the always-name-paths rule for chat references, present
+tense, relative paths in cross-references — lives in the
+workspace's `skills/reporting.md`. Read it before writing
+any output that explains, proposes, analyses, or
+summarises.
 
 ---
 
