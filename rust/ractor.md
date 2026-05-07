@@ -273,11 +273,9 @@ parent's State holds clones for the lifetime of the daemon.
 When the crate ships a one-shot CLI binary or wants tests without a tokio
 runtime, expose the dispatch as inherent methods on `State`. The async
 `handle` is a thin shell; `State` carries the real method, sync and total.
-Tests call `State` directly — no actor harness, no tokio runtime, no
-mocking.
 
 ```rust
-// reconciler.rs — the actor side is a shell
+// the actor side is a shell
 async fn handle(
     &self,
     _myself: ActorRef<Self::Msg>,
@@ -307,27 +305,13 @@ impl State {
 }
 ```
 
-```rust
-// tests/reconciler.rs — direct, no runtime
-struct Fixture { arguments: reconciler::Arguments }
+The façade and the actor share *the same* per-verb method implementations
+on `State` — no duplication.
 
-impl Fixture {
-    fn apply(&self) -> Result<(), Error> {
-        State::new(self.arguments.clone()).apply()
-    }
-}
-
-#[test]
-fn applies_a_proposal_to_a_target_file() {
-    let fixture = Fixture { arguments: … };
-    fixture.apply().unwrap();
-    // assert the side effect on disk
-}
-```
-
-Add a façade only when there's a non-actor consumer (binary, tests). Don't
-manufacture one for ceremony. The façade and the actor share *the same*
-per-verb method implementations on `State` — no duplication.
+Add a façade only when there's a non-actor consumer (binary, tests).
+Don't manufacture one for ceremony. For the test-fixture pattern that
+calls `State` directly without a tokio runtime, see `testing.md`
+§"The principle — sync façade on State".
 
 ## Daemon entry point
 
