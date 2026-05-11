@@ -8,17 +8,18 @@ fetched: 2026-04-23
 > The Rust **discipline** lives in this workspace's
 > `skills/rust-discipline.md`. That skill is what to read
 > before writing Rust: methods on types, no ZST holders,
-> domain newtypes, one-object in/out, error enums, `*Handle`
-> consumer surface, ractor-as-default, tests in separate
-> files, naming, module layout, documentation.
+> domain newtypes, one-object in/out, error enums, actor
+> topology, tests in separate files, naming, module layout,
+> documentation.
 >
 > This file is the toolchain-side reference: `Cargo.toml`
 > shape, cross-crate dependency mechanics, pin strategy.
 >
 > Neighboring lore files: `nix-packaging.md` for crane +
-> fenix; `ractor.md` for the actor framework; `rkyv.md` for
-> the binary contract format; `testing.md` for testing
-> patterns.
+> fenix; `rkyv.md` for the binary contract format;
+> `testing.md` for testing patterns. Actor runtime choice lives
+> in the active workspace's actor-system skill; `ractor.md` is a
+> historical reference, not the default.
 
 ## Cargo.toml
 
@@ -35,9 +36,9 @@ fetched: 2026-04-23
   interop). Internal text formats use a single chosen typed
   text codec (one project-wide decoder/encoder pair), not
   serde.
-- `tokio` comes in automatically via ractor for any service
-  with concurrent state. Plain sync is fine for one-shot CLIs
-  and library crates.
+- `tokio` comes in through the selected async runtime for any
+  service with concurrent state. Plain sync is fine for one-shot
+  CLIs and library crates.
 - Standard for errors: `thiserror`. Forbidden: `anyhow`,
   `eyre` — they erase error types at boundaries.
 

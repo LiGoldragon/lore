@@ -220,16 +220,16 @@ self-cast loops — requires a real actor runtime. For those:
   on `RpcReplyPort`s the test holds).
 - Tear down with `*Handle::wait(.)` after sending a `Stop`.
 
-Don't mock supervisors or fake mailboxes. ractor's runtime is
-fast; running it for real is cheaper than building a parallel
-mock harness.
+Don't mock supervisors or fake mailboxes. The selected actor runtime
+is fast enough to run for real; that is cheaper than building a
+parallel mock harness.
 
 ## See also
 
 - `style.md` — Rust toolchain reference (Cargo.toml shape,
   cross-crate deps).
-- `ractor.md` — actor framework usage; the `*Handle` pattern,
-  `pre_start` initialization, sync façade.
+- the active workspace's actor-system skill — actor framework usage,
+  supervision, and public consumer surfaces.
 - `nix-packaging.md` — canonical crane + fenix flake; the
   `checks.default` wiring this file builds on.
 - `~/primary/skills/rust-discipline.md` — the discipline these

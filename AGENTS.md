@@ -443,9 +443,9 @@ based on verified upstream sources.
   enum per crate.
 - `rust/nix-packaging.md` — Canonical crane + fenix flake
   layout for Rust crates.
-- `rust/ractor.md` — Ractor 0.15 in daemons: per-file
-  four-piece template, `*Handle` consumer surface, per-verb
-  typed messages, pool initialization, sync façade.
+- the active workspace's actor-system skill — current runtime,
+  mailbox, supervision, and handle discipline. `rust/ractor.md`
+  is a historical Ractor reference, not a default pattern.
 - `rust/rkyv.md` — Rkyv 0.8 portable feature set,
   derive-alias pattern, encode/decode API, schema-fragility
   limit.
