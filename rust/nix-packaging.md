@@ -152,7 +152,7 @@ jj commit -m 'bump fenix' && jj bookmark set main -r @- && jj git push --bookmar
 `fenix` input in its `flake.nix` and runs:
 
 ```sh
-nix flake lock --inputs-from path:/git/github.com/LiGoldragon/signal-core
+nix flake lock --inputs-from github:LiGoldragon/signal-core?ref=main
 ```
 
 `--inputs-from` resolves any matching input (only `fenix` here,

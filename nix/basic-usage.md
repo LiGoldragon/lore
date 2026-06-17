@@ -58,7 +58,7 @@ This rewrites the `nixpkgs` entry in `flake.lock` while `flake.nix` still says `
 To reuse the rev another flake already pins — without ever typing a hash — use `--inputs-from`:
 
 ```
-nix flake lock --inputs-from path:/home/you/git/sibling-flake
+nix flake lock --inputs-from github:<owner>/<sibling-flake>?ref=<branch-or-rev>
 ```
 
 This resolves any inputs that match names in the sibling flake using the sibling's locked entries. Handy when you hoist a transitive input to the top level and want it to stay in sync with a consumer flake's lock.
