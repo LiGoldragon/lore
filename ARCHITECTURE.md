@@ -46,7 +46,7 @@ What lives here:
 
 What does not live here:
 
-- workspace intent (each workspace's `ESSENCE.md` / `INTENT.md`);
+- workspace intent (each workspace's `ARCHITECTURE.md` §"Workspace vision and intent");
 - workspace coordination state — locks, role lanes, active-repo maps belong to
   each workspace's `protocols/`;
 - per-role discipline (`skills/<role>.md`) and per-repo discipline (each repo's
