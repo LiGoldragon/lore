@@ -488,3 +488,10 @@ files small (~100 lines), one topic each, with the
 frontmatter from `README.md` (`source:`, `fetched:`,
 `trimmed:`). Prefer verbatim excerpts from upstream over
 paraphrase.
+
+## Protos estate status
+
+Protos estate scope: out of scope
+Stack: not applicable
+Role: content
+This is scope metadata, not a stack.
